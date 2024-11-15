@@ -1,2 +1,5 @@
 .idea/
 */.env
+mobile/ios
+mobile/android
+*/node_modules
