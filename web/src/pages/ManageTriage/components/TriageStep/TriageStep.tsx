@@ -4,6 +4,7 @@ import { Handle, Position, useEdges } from "@xyflow/react";
 import { useMemo } from "react";
 import clsx from "clsx";
 import { TriageInput } from "./comoponoents/TriageInput.tsx";
+import { TriagedAddOptions } from "./comoponoents/TriagedAddOptions.tsx";
 
 export function TriageStep(props: NodeProps<TriageNode>) {
   const edges = useEdges();
@@ -15,6 +16,7 @@ export function TriageStep(props: NodeProps<TriageNode>) {
     <>
       <div className="w-[300px] flex flex-col items-center rounded-[20px] border-[3px] border-black p-5 shadow-lg background-white">
         <TriageInput {...props} />
+        <TriagedAddOptions {...props} />
         {/*    options*/}
         {/*    type*/}
         {/*    label*/}
