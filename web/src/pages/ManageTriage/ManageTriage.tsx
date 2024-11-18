@@ -21,11 +21,12 @@ import clsx from "clsx";
 import { useDebouncedCallback } from "../../hooks/useDebouncedCallback.ts";
 import { CustomNodeTypes, StepTypes } from "../../types.ts";
 import { EmptyNode } from "./components/EmptyNode.tsx";
-import { TriageStep } from "./components/TriageStep/TriageStep.tsx";
+import { TriageStep } from "./components/TriageStep/TriageStep";
+import { triageOption } from "./components/TriageOption/TriageOption.tsx";
 
 const nodeTypes = {
   triageStep: TriageStep,
-  // triageOption
+  triageOption: triageOption,
 };
 
 const defaultEdgeOptions = {
@@ -115,8 +116,7 @@ export default function App() {
         >
           <Controls />
           <MiniMap />
-          {/*<Background variant="dots" gap={12} size={1} />*/}
-          <Background variant={BackgroundVariant.Dots} />
+          <Background variant={BackgroundVariant.Cross} />
         </ReactFlow>
       </div>
       <div

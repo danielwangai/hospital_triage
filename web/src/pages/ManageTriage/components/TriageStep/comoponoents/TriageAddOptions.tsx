@@ -7,11 +7,9 @@ import {
 import { useCallback, useMemo } from "react";
 import { useNodes, useReactFlow } from "@xyflow/react";
 
-export function TriagedAddOptions(props: NodeProps<TriageNode>) {
+export function TriageAddOptions(props: NodeProps<TriageNode>) {
   const nodes = useNodes();
   const { addNodes } = useReactFlow();
-
-  console.log(nodes);
 
   const optionSiblings = useMemo(() => {
     return nodes.filter(({ parentId }) => parentId === props.id);
@@ -21,7 +19,7 @@ export function TriagedAddOptions(props: NodeProps<TriageNode>) {
     const newSibling: TriageOptionNode = {
       id: crypto.randomUUID(),
       parentId: props.id,
-      type: CustomNodeTypes.TriageOptions,
+      type: CustomNodeTypes.TriageOption,
       position: { x: 25, y: 0 },
       data: { value: "", index: 0 },
     };

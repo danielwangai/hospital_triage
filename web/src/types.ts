@@ -2,7 +2,7 @@ import { Node } from "@xyflow/react";
 
 export enum CustomNodeTypes {
   TriageStep = "triageStep",
-  TriageOptions = "triageOptions",
+  TriageOption = "triageOption",
 }
 
 export enum TriageTags {
@@ -20,7 +20,7 @@ export type TriageNode = Node<{
   value: string;
   isRoot: boolean;
   stepType: StepTypes;
-  assignedLabel?: string;
+  assignedLabel?: TriageTags;
 }>;
 
 export type TriageOptionNode = Node<{
