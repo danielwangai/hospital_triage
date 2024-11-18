@@ -19,6 +19,14 @@ import {
 import "@xyflow/react/dist/style.css";
 import clsx from "clsx";
 import { useDebouncedCallback } from "../../hooks/useDebouncedCallback.ts";
+import { CustomNodeTypes, StepTypes } from "../../types.ts";
+import { EmptyNode } from "./components/EmptyNode.tsx";
+import { TriageStep } from "./components/TriageStep/TriageStep.tsx";
+
+const nodeTypes = {
+  triageStep: TriageStep,
+  // triageOption
+};
 
 const defaultEdgeOptions = {
   style: { strokeWidth: 3, stroke: "black" },
@@ -40,8 +48,8 @@ export default function App() {
   ];
   const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
-  const [nodes, setNodes] = useState<Node[]>(initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [edges, setEdges] = useState<Edge[]>([]);
   const [savingChanges, setSavingChanges] = useState<boolean>(false);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null);
 
@@ -68,6 +76,17 @@ export default function App() {
     [setEdges],
   );
 
+  const createRootNode = useCallback(() => {
+    setNodes([
+      {
+        id: crypto.randomUUID(),
+        type: CustomNodeTypes.TriageStep,
+        position: { x: 100, y: 100 },
+        data: { value: "", isRoot: true, stepType: StepTypes.Step },
+      },
+    ]);
+  }, []);
+
   useDebouncedCallback(
     () => {
       if (!lastUpdatedAt) return;
@@ -76,6 +95,8 @@ export default function App() {
     [lastUpdatedAt],
     1500,
   );
+
+  if (!nodes.length) return <EmptyNode onClick={createRootNode} />;
 
   return (
     <>
@@ -87,7 +108,7 @@ export default function App() {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           fitView // show everything on initial load
-          // nodeTypes={}
+          nodeTypes={nodeTypes}
           className="bg-red-50"
           defaultEdgeOptions={defaultEdgeOptions}
           connectionLineStyle={connectionLineStyle}
