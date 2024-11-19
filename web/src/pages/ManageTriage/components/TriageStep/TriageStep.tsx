@@ -2,8 +2,9 @@ import { Handle, NodeProps, Position, useEdges } from "@xyflow/react";
 import { TriageNode } from "../../../../types";
 import { useMemo } from "react";
 import clsx from "clsx";
-import { TriageInput } from "./comoponoents/TriageInput.tsx";
-import { TriageAddOptions } from "./comoponoents/TriageAddOptions.tsx";
+import { TriageInput } from "./components/TriageInput.tsx";
+import { TriageAddOptions } from "./components/TriageAddOptions.tsx";
+import { TriageType } from "./components/TriageType.tsx";
 
 export function TriageStep(props: NodeProps<TriageNode>) {
   const edges = useEdges();
@@ -17,7 +18,7 @@ export function TriageStep(props: NodeProps<TriageNode>) {
       <div className="w-[300px] flex flex-col items-center rounded-[20px] border-[3px] border-black p-5 gap-2 shadow-lg bg-white">
         <TriageInput {...props} />
         <TriageAddOptions {...props} />
-        {/*<TriageType {...props} />*/}
+        <TriageType {...props} />
         {/*<TriageLabel {...props} />*/}
       </div>
       {!props.data.isRoot && (
