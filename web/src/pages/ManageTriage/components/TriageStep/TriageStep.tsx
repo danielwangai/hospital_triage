@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { TriageInput } from "./components/TriageInput.tsx";
 import { TriageAddOptions } from "./components/TriageAddOptions.tsx";
 import { TriageType } from "./components/TriageType.tsx";
+import { TriageLabel } from "./components/TriageLabel.tsx";
 
 export function TriageStep(props: NodeProps<TriageNode>) {
   const edges = useEdges();
@@ -19,7 +20,7 @@ export function TriageStep(props: NodeProps<TriageNode>) {
         <TriageInput {...props} />
         <TriageAddOptions {...props} />
         <TriageType {...props} />
-        {/*<TriageLabel {...props} />*/}
+        <TriageLabel {...props} />
       </div>
       {!props.data.isRoot && (
         <Handle
