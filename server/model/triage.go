@@ -19,7 +19,7 @@ type TriageNode struct {
 	Node
 	Data struct {
 		Value         string `json:"value"`
-		IsRoot        string `json:"isRoot"`
+		IsRoot        bool   `json:"isRoot"`
 		StepType      string `json:"stepType"`
 		AssignedLabel string `json:"assignedLabel"`
 	} `json:"data"`
@@ -27,7 +27,8 @@ type TriageNode struct {
 
 type TriageOptionNode struct {
 	Node
-	Data struct {
+	ParentId string `json:"parentId"`
+	Data     struct {
 		Value string `json:"value"`
 		Index int    `json:"index"`
 	} `json:"data"`
