@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   addEdge,
   applyEdgeChanges,
@@ -23,6 +23,7 @@ import { CustomNodeTypes, StepTypes } from "../../types.ts";
 import { EmptyNode } from "./components/EmptyNode.tsx";
 import { TriageStep } from "./components/TriageStep/TriageStep";
 import { triageOption } from "./components/TriageOption/TriageOption.tsx";
+import { getTriage, saveTriage } from "../../service.ts";
 
 const nodeTypes = {
   triageStep: TriageStep,
@@ -43,26 +44,18 @@ const connectionLineStyle = {
 };
 
 export default function App() {
-  const initialNodes = [
-    { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
-    { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
-  ];
-  const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
-
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [savingChanges, setSavingChanges] = useState<boolean>(false);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null);
 
   const onNodesChange: OnNodesChange<Node> = useCallback((changes) => {
-    // give ui feedback that changes are being made and saved to db
     setSavingChanges(true);
     setLastUpdatedAt(performance.now());
     setNodes((nodes: Node[]) => applyNodeChanges(changes, nodes));
   }, []);
 
   const onEdgesChange: OnEdgesChange<Edge> = useCallback((changes) => {
-    // give ui feedback that changes are being made and saved to db
     setSavingChanges(true);
     setLastUpdatedAt(performance.now());
     setEdges((edges: Edge[]) => applyEdgeChanges(changes, edges));
@@ -89,7 +82,8 @@ export default function App() {
   }, []);
 
   useDebouncedCallback(
-    () => {
+    async () => {
+      await saveTriage(nodes, edges);
       if (!lastUpdatedAt) return;
       setSavingChanges(false);
     },
@@ -97,18 +91,26 @@ export default function App() {
     1500,
   );
 
+  useEffect(() => {
+    (async () => {
+      const { nodes, edges } = await getTriage();
+      setNodes(nodes);
+      setEdges(edges);
+    })();
+  }, []);
+
   if (!nodes.length) return <EmptyNode onClick={createRootNode} />;
 
   return (
     <>
-      <div style={{ width: "100vw", height: "100vh" }}>
+      <div style={{ width: "100vw", height: "90vh" }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
-          fitView // show everything on initial load
+          fitView
           nodeTypes={nodeTypes}
           className="bg-red-50"
           defaultEdgeOptions={defaultEdgeOptions}
