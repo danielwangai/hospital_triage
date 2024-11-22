@@ -20,9 +20,11 @@ func main() {
 	server.Use(cors.New(cors.Config{AllowOrigins: "*"}))
 
 	triageStorage := storage.InitTriageStorage(db)
+	queueStorage := storage.InitQueueStorage(db)
 
 	// handlers
 	handler.InitTriageHandler(server.Group("/triage"), triageStorage)
+	handler.InitQueueHandler(server.Group("/queue"), queueStorage)
 
 	server.Listen(fmt.Sprintf(":" + env.PORT))
 }
