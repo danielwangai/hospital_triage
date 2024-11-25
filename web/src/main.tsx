@@ -4,6 +4,7 @@ import Root from "./Root.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ManageTriage from "./pages/ManageTriage/ManageTriage.tsx";
+import {LiveQueue} from "./pages/LiveQueue/LiveQueue.tsx";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
       {
         index: true,
         path: "/",
-        element: <h1>Live Queue</h1>,
+        element: <LiveQueue />,
       },
       {
         path: "/triage",

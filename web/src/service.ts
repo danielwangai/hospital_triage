@@ -1,5 +1,5 @@
 import { Edge, Node } from "@xyflow/react";
-import { CustomNodeTypes, TriageNode, TriageOptionNode } from "./types.ts";
+import {CustomNodeTypes, Queue, TriageNode, TriageOptionNode} from "./types.ts";
 
 const URL = "http://localhost:3000";
 
@@ -58,4 +58,15 @@ export async function saveTriage(
       edges: EdgesDTO,
     }),
   });
+}
+
+export async function callForAssessment(patientNumber: number) {
+  return fetch(`${URL}/queue/${patientNumber}`, {
+    method: "DELETE",
+  })
+}
+
+export async function getQueue(): Promise<Queue> {
+  return fetch(`${URL}/queue`)
+      .then(res => res.json());
 }
