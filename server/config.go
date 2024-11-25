@@ -10,6 +10,13 @@ type Env struct {
 	PORT           string `env:"PORT,required"`
 	MONGO_URI      string `env:"MONGO_URI,required"`
 	MONGO_DATABASE string `env:"MONGO_DATABASE,required"`
+
+	//	pusher
+	PUSHER_APP_ID  string `env:"PUSHER_APP_ID,required"`
+	PUSHER_KEY     string `env:"PUSHER_KEY,required"`
+	PUSHER_SECRET  string `env:"PUSHER_SECRET,required"`
+	PUSHER_CLUSTER string `env:"PUSHER_CLUSTER,required"`
+	PUSHER_SECURE  bool   `env:"PUSHER_SECURE,required"`
 }
 
 func EnvConfig() *Env {
