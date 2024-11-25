@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"github.com/pusher/pusher-http-go/v5"
 	"time"
 
 	"github.com/danielwangai/hospital_triage/model"
@@ -12,7 +13,7 @@ import (
 
 type QueueHandler struct {
 	storage *storage.QueueStorage
-	//pusher  *pusher.Client
+	pusher  *pusher.Client
 }
 
 func (h *QueueHandler) GetQueue(ctx *fiber.Ctx) error {
@@ -47,7 +48,7 @@ func (h *QueueHandler) PushToQueue(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusBadRequest)
 	}
 
-	//h.pusher.Trigger("live-queue", "patient-in", number)
+	h.pusher.Trigger("live-queue", "patient-in", number)
 
 	return ctx.Status(fiber.StatusCreated).JSON(&fiber.Map{
 		"number":        number,
@@ -65,15 +66,15 @@ func (h *QueueHandler) RemoveFromQueue(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusBadRequest)
 	}
 
-	//h.pusher.Trigger("live-queue", "patient-out", patientNumber)
+	h.pusher.Trigger("live-queue", "patient-out", patientNumber)
 
 	return ctx.SendStatus(fiber.StatusOK)
 }
 
-func InitQueueHandler(router fiber.Router, storage *storage.QueueStorage) {
+func InitQueueHandler(router fiber.Router, storage *storage.QueueStorage, pusherClient *pusher.Client) {
 	handler := &QueueHandler{
 		storage: storage,
-		//pusher:  pusher,
+		pusher:  pusherClient,
 	}
 
 	router.Get("/", handler.GetQueue)
