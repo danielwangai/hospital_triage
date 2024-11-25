@@ -2,6 +2,8 @@ import {useMutation, useQuery} from "@tanstack/react-query";
 import {callForAssessment, getQueue} from "../../service.ts";
 import clsx from "clsx";
 import {TriageTags} from "../../types.ts";
+import Pusher from "pusher-js";
+import {useEffect} from "react";
 
 export const colors = {
     [TriageTags.Emergency]: {
@@ -18,6 +20,8 @@ export const colors = {
     },
 };
 export function LiveQueue() {
+    const pusher = new Pusher(import.meta.env.VITE_PUSHER_KEY, {cluster: "ap2"});
+
     const { data, isLoading, isError, refetch} = useQuery({
         queryKey: ["queue"],
         queryFn: getQueue
@@ -27,6 +31,14 @@ export function LiveQueue() {
         mutationFn: callForAssessment,
         onSuccess: () => refetch()
     })
+
+    useEffect(() => {
+        const channel = pusher.subscribe("live-queue");
+        channel.bind("patient-in", () => refetch())
+        return () => {
+            channel.unsubscribe();
+        }
+    }, []);
 
     if (isError) {
         return <div>Error fetching queue</div>
