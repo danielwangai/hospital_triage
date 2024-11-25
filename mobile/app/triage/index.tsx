@@ -1,9 +1,10 @@
 import {View, Text, Button} from "tamagui";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useRef, useState} from "react";
-import {ActivityIndicator, Animated, Dimensions, Easing, FlatList} from "react-native";
+import {ActivityIndicator, Alert, Animated, Dimensions, Easing, FlatList} from "react-native";
 import {TriageOption, TriageStep} from "@/types";
 import {useMutation, useQuery} from "@tanstack/react-query";
-import {getTriageDecisionTree} from "@/services";
+import {getTriageDecisionTree, pushToQueue} from "@/services";
 import {router} from "expo-router";
 
 const animationConfig = {
@@ -28,8 +29,12 @@ export default function TriageScreen() {
 
   const mutation = useMutation({
       mutationKey: ["triage", "confirm"],
-      mutationFn: async () => {},
-      onSuccess: () => router.back(),
+      mutationFn: pushToQueue,
+      onSuccess: async (data) => {
+          await AsyncStorage.setItem("patient", JSON.stringify(data));
+          router.back()
+      },
+      onError: ({message}) => Alert.alert("Error ", message),
   });
 
     async function onNextStep(option: TriageStep) {
@@ -37,7 +42,7 @@ export default function TriageScreen() {
             toValue: -Dimensions.get("window").width,
             ...animationConfig
         }).start(() => {
-            if(option.assignedLabel) mutation.mutate();
+            if(option.assignedLabel) mutation.mutate(option.assignedLabel);
             if(option.nextStep) setNextStep(option.nextStep);
 
             ref.current.setValue(Dimensions.get("window").width);
